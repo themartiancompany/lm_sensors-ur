@@ -1,4 +1,3 @@
-# $Id: PKGBUILD,v 1.14 2008/02/02 09:39:52 andyrtr Exp $
 # Maintainer: aurelien <aurelien@archlinux.org>
 # Contributor: Aurelien Foret <orelien@chez.com>
 pkgname=lm_sensors
