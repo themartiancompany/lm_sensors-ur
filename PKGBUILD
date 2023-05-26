@@ -11,9 +11,10 @@ pkgdesc="Collection of user space tools for general SMBus access and hardware mo
 arch=('x86_64')
 url="https://hwmon.wiki.kernel.org/lm_sensors"
 license=('GPL' 'LGPL')
+depends=('bash' 'glibc')
+makedepends=('rrdtool' 'perl' 'git')
 optdepends=('rrdtool: for logging with sensord'
             'perl: for sensor detection and configuration convert')
-makedepends=('rrdtool' 'perl' 'git')
 provides=('libsensors.so')
 backup=('etc/sensors3.conf' 'etc/healthd.conf' 'etc/conf.d/sensord')
 #source=(lm_sensors-${pkgver}.tar.gz::https://github.com/lm-sensors/lm-sensors/archive/V${_pkgver}.tar.gz
