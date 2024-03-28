@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: AGPL-3.0
+#
+# Maintainer:  Pellegrino Prevete <cGVsbGVncmlub3ByZXZldGVAZ21haWwuY29tCg== | base -d>
+# Maintainer:  Truocolo <truocolo@aol.com>
 # Maintainer: Laurent Carlier <lordheavym@gmail.com>
 # Contributor: Eric Bélanger
 
@@ -11,49 +15,108 @@ pkgdesc="Collection of user space tools for general SMBus access and hardware mo
 arch=('x86_64')
 url="https://hwmon.wiki.kernel.org/lm_sensors"
 license=('GPL' 'LGPL')
-depends=('bash' 'glibc')
-makedepends=('rrdtool' 'perl' 'git')
-optdepends=('rrdtool: for logging with sensord'
-            'perl: for sensor detection and configuration convert')
-provides=('libsensors.so')
-backup=('etc/sensors3.conf' 'etc/healthd.conf' 'etc/conf.d/sensord')
+depends=(
+  'bash'
+  'glibc'
+)
+makedepends=(
+  'rrdtool'
+  'perl'
+  'git'
+)
+optdepends=(
+  'rrdtool: for logging with sensord'
+  'perl: for sensor detection and configuration convert'
+)
+provides=(
+  'libsensors.so'
+)
+backup=(
+  'etc/sensors3.conf'
+  'etc/healthd.conf'
+  'etc/conf.d/sensord'
+)
 #source=(lm_sensors-${pkgver}.tar.gz::https://github.com/lm-sensors/lm-sensors/archive/V${_pkgver}.tar.gz
-source=("git+https://github.com/groeck/lm-sensors.git#commit=${_commit}"
-	healthd healthd.conf healthd.service sensord.conf)
-sha256sums=('SKIP'
-            '0ac9afb2a9155dd74ab393756ed552cd542dde1081149beb2ab4ec7ff55b8f4a'
-            '5d17a366b175cf9cb4bb0115c030d4b8d91231546f713784a74935b6e533da9f'
-            '2638cd363e60f8d36bcac468f414a6ba29a1b5599f40fc651ca953858c8429d7'
-            '23bebef4c250f8c0aaba2c75fd3d2c8ee9473cc91a342161a9f5b3a34ddfa9e5')
-validpgpkeys=('7CA69F4460F1BDC41FD2C858A5526B9BB3CD4E6A')
+source=(
+  "git+https://github.com/groeck/lm-sensors.git#commit=${_commit}"
+  healthd
+  healthd.conf
+  healthd.service
+  sensord.conf
+)
+sha256sums=(
+  'SKIP'
+  '0ac9afb2a9155dd74ab393756ed552cd542dde1081149beb2ab4ec7ff55b8f4a'
+  '5d17a366b175cf9cb4bb0115c030d4b8d91231546f713784a74935b6e533da9f'
+  '2638cd363e60f8d36bcac468f414a6ba29a1b5599f40fc651ca953858c8429d7'
+  '23bebef4c250f8c0aaba2c75fd3d2c8ee9473cc91a342161a9f5b3a34ddfa9e5'
+)
+validpgpkeys=(
+  '7CA69F4460F1BDC41FD2C858A5526B9BB3CD4E6A'
+)
 
 pkgver() {
-  cd "${srcdir}"/lm-sensors*
-
-  git describe --long --tags | sed 's/V//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  cd \
+    "${srcdir}"/lm-sensors*
+  git \
+    describe \
+      --long \
+      --tags | \
+    sed \
+      's/V//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-  cd "${srcdir}"/lm-sensors*
-  sed -i 's|/etc/sysconfig|/etc/conf.d|' prog/{detect/sensors-detect,init/{sensord,lm_sensors}.service}
-  sed -i 's/EnvironmentFile=/EnvironmentFile=-/' prog/init/lm_sensors.service
+  cd \
+    "${srcdir}"/lm-sensors*
+  sed \
+    -i \
+      's|/etc/sysconfig|/etc/conf.d|' \
+      prog/{detect/sensors-detect,init/{sensord,lm_sensors}.service}
+  sed \
+    -i \
+      's/EnvironmentFile=/EnvironmentFile=-/' \
+      prog/init/lm_sensors.service
 }
 
 build() {
-  cd "${srcdir}"/lm-sensors*
-  make PREFIX=/usr
+  cd \
+    "${srcdir}"/lm-sensors*
+  make \
+    PREFIX=/usr
 }
 
 package() {
-  cd "${srcdir}"/lm-sensors*
-  make PROG_EXTRA=sensord BUILD_STATIC_LIB=0 \
-    PREFIX=/usr SBINDIR=/usr/bin MANDIR=/usr/share/man DESTDIR="${pkgdir}" install
-
-  install -D -m755 "${srcdir}/healthd" "${pkgdir}/usr/bin/healthd"
-
-  install -D -m644 "${srcdir}/healthd.conf" "${pkgdir}/etc/healthd.conf"
-  install -D -m644 "${srcdir}/sensord.conf" "${pkgdir}/etc/conf.d/sensord"
- 
-  install -D -m644 "${srcdir}/healthd.service" "${pkgdir}/usr/lib/systemd/system/healthd.service"
-  install -D -m644 prog/init/*.service "${pkgdir}/usr/lib/systemd/system/"
+  cd \
+    "${srcdir}"/lm-sensors*
+  make \
+    PROG_EXTRA=sensord \
+    BUILD_STATIC_LIB=0 \
+    PREFIX=/usr \
+    SBINDIR=/usr/bin \
+    MANDIR=/usr/share/man \
+    DESTDIR="${pkgdir}" \
+    install
+  install \
+    -Dm755 \
+    "${srcdir}/healthd" \
+    "${pkgdir}/usr/bin/healthd"
+  install \
+    -Dm644 \
+    "${srcdir}/healthd.conf" \
+    "${pkgdir}/etc/healthd.conf"
+  install \
+    -Dm644 \
+    "${srcdir}/sensord.conf" \
+    "${pkgdir}/etc/conf.d/sensord"
+  install \
+    -Dm644 \
+    "${srcdir}/healthd.service" \
+    "${pkgdir}/usr/lib/systemd/system/healthd.service"
+  install \
+    -Dm644 \
+    prog/init/*.service \
+    "${pkgdir}/usr/lib/systemd/system/"
 }
+
+# vim:set sw=2 sts=-1 et:
